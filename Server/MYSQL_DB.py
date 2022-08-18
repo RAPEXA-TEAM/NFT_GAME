@@ -15,12 +15,17 @@ def update_user_percentage_in_database(user,percentage):
     pass
 
 def write_user_to_database(user):
-    #TODO
-    pass
+    '''this function create user on database'''
+    db = connect_to_database()
+    cur = db.cursor()                       
+    qury = f'INSERT INTO Users (id, user, percentage) VALUES (null, "{user}", 0);'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
+    return True
 
 def check_user_messages(user):
-    #TODO
-    pass
+    '''this function read user messages from database'''
 
 def Make_Database():
     '''This function make database'''
