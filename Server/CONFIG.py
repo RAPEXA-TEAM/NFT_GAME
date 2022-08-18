@@ -1,0 +1,6 @@
+SECRET_KEY = "secret!"
+ETH = "https://eth-mainnet.public.blastapi.io"
+MYSQL_HOST = "127.0.0.1"
+MYSQL_USER = "NFTUSER"
+MYSQL_PASS = "NFTPASS"
+MYSQL_DATABAS = "NFT_GAME"
