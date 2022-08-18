@@ -14,18 +14,23 @@ def update_user_percentage_in_database(user,percentage):
     #TODO
     pass
 
-def write_user_to_database(user):
+def write_user_to_database(user,nfthash):
     '''this function create user on database'''
     db = connect_to_database()
     cur = db.cursor()                       
-    qury = f'INSERT INTO Users (id, user, percentage) VALUES (null, "{user}", 0);'
+    qury = f'INSERT INTO Users (id, user, nfthash, percentage) VALUES (null, "{user}", "{nfthash}", 0);'
     cur.execute(qury)
     db.commit()
     db.close()    
     return True
 
-def check_user_messages(user):
-    '''this function read user messages from database'''
+def read_users_messages():
+    '''this function return user messages from database'''
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute(f"SELECT * FROM Messages;")
+    db.close()
+    return cur.fetchall()
 
 def Make_Database():
     '''This function make database'''
@@ -53,15 +58,18 @@ def Make_Database():
     print("[+] Create Messages table")
     db = connect_to_database()
     cur = db.cursor()                       
-    qury = "CREATE TABLE Users (id INT NOT NULL AUTO_INCREMENT,user VARCHAR(260),percentage INT, PRIMARY KEY(id));"
+    qury = "CREATE TABLE Users (id INT NOT NULL AUTO_INCREMENT,user VARCHAR(260),nfthash VARCHAR(260),percentage INT, PRIMARY KEY(id));"
     cur.execute(qury)
     db.commit()
     db.close()
     print("[+] Create Users table")
     return True
 
-if sys.argv[1] == "execute":
-    if Make_Database():
-        print("[+] Done!")
-    else :
-        print("[-] Error...")
+try:
+    if sys.argv[1] == "execute":
+        if Make_Database():
+            print("[+] Done!")
+        else :
+            print("[-] Error...")
+except:
+    pass
