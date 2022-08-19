@@ -1,3 +1,4 @@
+#!/usr/bin/env
 import sys
 import pymysql
 import CONFIG     #SERVER CONGIG
