@@ -25,6 +25,15 @@ def update_user_percentage_in_database(user,percentage,level):
     db.commit()
     db.close()
 
+def read_user_last_level_in_database(user):
+    '''this function return one user level passed'''
+    db = connect_to_database()
+    cur = db.cursor()
+    qury = f' select * from timestamps where user = "{user}";'
+    cur.execute(qury)
+    db.close()
+    return cur.fetchall()
+
 def write_user_to_database(user,nfthash):
     '''this function create user on database'''
     db = connect_to_database()
