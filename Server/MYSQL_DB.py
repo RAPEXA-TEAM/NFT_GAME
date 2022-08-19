@@ -10,9 +10,20 @@ def connect_to_database():
                        db=CONFIG.MYSQL_DATABAS)
     return(db)
     
-def update_user_percentage_in_database(user,percentage):
-    #TODO
-    pass
+def update_user_percentage_in_database(user,percentage,level):
+    '''This function handle each level up MySQL query'''
+    db = connect_to_database()
+    cur = db.cursor()                       
+    qury = f'INSERT INTO Timestamps (id, user, level) VALUES  (null,"{user}","{level}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+    db = connect_to_database()
+    cur = db.cursor()                       
+    qury = f'UPDATE Users SET percentage = {percentage} WHERE user = "{user}";'
+    cur.execute(qury)
+    db.commit()
+    db.close()
 
 def write_user_to_database(user,nfthash):
     '''this function create user on database'''
@@ -29,6 +40,14 @@ def read_users_messages():
     db = connect_to_database()
     cur = db.cursor()
     cur.execute(f"SELECT * FROM Messages;")
+    db.close()
+    return cur.fetchall()
+
+def write_user_message(user,msg):
+    '''this function write user messages to database'''
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute(f'INSERT INTO message (id, user, message) VALUES (null, "{user}", "{msg}");')
     db.close()
     return cur.fetchall()
 
@@ -63,6 +82,13 @@ def Make_Database():
     db.commit()
     db.close()
     print("[+] Create Users table")
+    db = connect_to_database()
+    cur = db.cursor()                       
+    qury = "CREATE TABLE Timestamps (id INT NOT NULL AUTO_INCREMENT,user VARCHAR(260),level VARCHAR(260),date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id));"
+    cur.execute(qury)
+    db.commit()
+    db.close()
+    print("[+] Create Timestamps table")
     return True
 
 try:
