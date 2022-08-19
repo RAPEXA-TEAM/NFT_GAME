@@ -1,9 +1,8 @@
 #!/usr/bin/env
-import re
+
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from web3 import Web3
 
 import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
@@ -21,8 +20,6 @@ limiter = Limiter(
     key_func=get_remote_address,
 )
 
-w3 = Web3(Web3.HTTPProvider(CONFIG.ETH))
-
 @app.route("/ok")
 def sys_check():
     '''this function check system'''
@@ -36,6 +33,7 @@ def handle_create_user():
         user = request.json["user"]
         nfthash = request.json["nfthash"]
         try :
+            #TODO
             if Check_User(user,nfthash):
                 if MYSQL_DB.write_user_to_database(user,nfthash):
                     ret = {'status':'ok','code':'200'}
@@ -198,6 +196,8 @@ def handle_level_six_pass():
 
             if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
+                #TODO
+                Send_Email(user)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
         
@@ -215,18 +215,7 @@ def Send_Email(user):
 
 def Check_User(user,nfthash):
     #TODO
-    #try:
-    #    TX = w3.eth.get_transaction(str(TXHASH))
-    #    TX_FROM = TX["from"]
-    #    TX_VALUE = TX["value"]
-    #    if check:
-    #        return True            
-    #    else :
-    #        return False
-    
-    #except:
-    #    return False
-    return True
+    pass
 
 if __name__ == "__main__":
     app.run("0.0.0.0",5000,debug=True)
