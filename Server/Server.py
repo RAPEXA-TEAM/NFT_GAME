@@ -1,4 +1,5 @@
 #!/usr/bin/env
+import re
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -93,49 +94,122 @@ def handle_send_message():
 
 @app.route(f'/{CONFIG.LEVEL1_CODE}',methods=["GET", "POST"])
 def handle_level_one_pass():
+    '''This function pass level1 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
         MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
-    #TODO
-    pass
+        ret = {'status':'ok','code':'200'}
+        return jsonify(ret)
+    
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL2_CODE}',methods=["GET", "POST"])
 def handle_level_two_pass():
+    '''This function pass level2 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
-    #TODO
-    pass
+        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
+        try:
+
+            if user_last_level[0][2] == CONFIG.LEVEL1_CODE:
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+        
+        except:
+
+            ret = {'status':'failed','error':'user didnt pass level1'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL3_CODE}',methods=["GET", "POST"])
 def handle_level_three_pass():
+    '''This function pass level3 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
-    #TODO
-    pass
+        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
+        try:
+
+            if user_last_level[1][2] == CONFIG.LEVEL2_CODE:
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+        
+        except:
+
+            ret = {'status':'failed','error':'user didnt pass level2'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL4_CODE}',methods=["GET", "POST"])
 def handle_level_four_pass():
+    '''This function pass level4 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
-    #TODO
-    pass
+        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
+        try:
+
+            if user_last_level[2][2] == CONFIG.LEVEL3_CODE:
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+        
+        except:
+
+            ret = {'status':'failed','error':'user didnt pass level3'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL5_CODE}',methods=["GET", "POST"])
 def handle_level_five_pass():
+    '''This function pass level5 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
-    #TODO
-    pass
+        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
+        try:
+
+            if user_last_level[3][2] == CONFIG.LEVEL4_CODE:
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+        
+        except:
+
+            ret = {'status':'failed','error':'user didnt pass level4'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL6_CODE}',methods=["GET", "POST"])
 def handle_level_six_pass():
+    '''This function pass level6 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
+        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
+        try:
+
+            if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+        
+        except:
+
+            ret = {'status':'failed','error':'user didnt pass level4'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
+
+def Send_Email(user):
     #TODO
     pass
 
