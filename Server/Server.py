@@ -8,6 +8,7 @@ import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
 
 app = Flask(__name__)
+#@limiter.limit("5 per minute")
 
 # config
 app.config.update(
@@ -23,12 +24,13 @@ w3 = Web3(Web3.HTTPProvider(CONFIG.ETH))
 
 @app.route("/ok")
 def sys_check():
-    '''this function is for check system'''
+    '''this function check system'''
     ret = {'status':'ok','code':'200'}
     return jsonify(ret)
 
 @app.route('/create_user',methods=["GET", "POST"])
 def handle_create_user():
+    '''this function create user after check'''
     if request.method == 'POST':
         user = request.json["user"]
         nfthash = request.json["nfthash"]
@@ -51,8 +53,8 @@ def handle_create_user():
     return jsonify(ret)
 
 @app.route('/messages',methods=["GET", "POST"])
-@limiter.limit("5 per minute")
 def handle_messages():
+    '''this function return one user messages'''
     if request.method == 'POST':
         user = request.json["user"]
         json_messages = {}
@@ -68,51 +70,72 @@ def handle_messages():
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
-@app.route('/level_one_pass',methods=["GET", "POST"])
+@app.route('/Send_message',methods=["GET","POST"])
+def handle_send_message():
+    '''this function is only for admin to send message to one user'''
+    if request.method == "POST":
+        user = request.json["user"]
+        msg = request.json["message"]
+        try:
+
+            MYSQL_DB.write_user_message(user,msg)
+            ret = {'status':'ok','code':'200'}
+            return jsonify(ret)
+
+        except:
+
+            ret = {'status':'failed','error':'requests not valid'}
+            return jsonify(ret)
+    
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
+
+
+@app.route(f'/{CONFIG.LEVEL1_CODE}',methods=["GET", "POST"])
 def handle_level_one_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,15)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
     #TODO
     pass
 
-@app.route('/level_two_pass',methods=["GET", "POST"])
+@app.route(f'/{CONFIG.LEVEL2_CODE}',methods=["GET", "POST"])
 def handle_level_two_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,15)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
     #TODO
     pass
 
-@app.route('/level_three_pass',methods=["GET", "POST"])
+@app.route(f'/{CONFIG.LEVEL3_CODE}',methods=["GET", "POST"])
 def handle_level_three_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,15)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
     #TODO
     pass
 
-@app.route('/level_four_pass',methods=["GET", "POST"])
+@app.route(f'/{CONFIG.LEVEL4_CODE}',methods=["GET", "POST"])
 def handle_level_four_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,15)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
     #TODO
     pass
 
-@app.route('/level_five_pass',methods=["GET", "POST"])
+@app.route(f'/{CONFIG.LEVEL5_CODE}',methods=["GET", "POST"])
 def handle_level_five_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,20)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
     #TODO
     pass
 
-@app.route('/level_six_pass',methods=["GET", "POST"])
+@app.route(f'/{CONFIG.LEVEL6_CODE}',methods=["GET", "POST"])
 def handle_level_six_pass():
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,20)
+        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
     #TODO
     pass
 
