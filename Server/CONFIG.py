@@ -1,9 +1,18 @@
+#!/usr/bin/env
+
+# Flask
+
 SECRET_KEY = "secret!"
-ETH = "https://eth-mainnet.public.blastapi.io"
+
+# MySQL config
+
 MYSQL_HOST = "127.0.0.1"
 MYSQL_USER = "NFTUSER"
 MYSQL_PASS = "NFTPASS"
 MYSQL_DATABAS = "NFT_GAME"
+
+# Game levels
+
 LEVEL1 = 15
 LEVEL2 = 30
 LEVEL3 = 45
