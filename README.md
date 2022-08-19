@@ -36,3 +36,4 @@ The mysterious and obscure game of NFTs, participate in the game, just buy one o
 
 11. Config MySQL server `python MYSQL_DB.py execute`
 12. Start Server `python Server.py`
+13. Test Server `python TEST.py`
