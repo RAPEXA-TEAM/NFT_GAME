@@ -93,7 +93,31 @@ def handle_winners():
         ret = {'status':'failed','error':'connect to database failed'}
         return jsonify(ret)
 
-@app.route('/messages',methods=["GET", "POST"])
+@app.route('/all_messages',methods=["GET", "POST"])
+def handle_messages():
+    '''this function return all user messages'''
+    try:
+
+        json_messages = {}
+        List_Of_Messages = MYSQL_DB.read_users_messages()
+        for message in List_Of_Messages:
+            id_db, user_db, message_db = message
+            
+            if message_db != CONFIG.SOURCE:
+                json_messages[id_db] = {'Message' : message_db}
+            
+            else :
+                continue
+
+        Response = {'Code':200 , 'Messages': json_messages}
+        return jsonify(Response)      
+
+    except:
+        
+        ret = {'status':'failed','error':'connect to database failed'}
+        return jsonify(ret)
+
+@app.route('/my_messages',methods=["GET", "POST"])
 def handle_messages():
     '''this function return one user messages'''
     if request.method == 'POST':
