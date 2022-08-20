@@ -51,6 +51,48 @@ def handle_create_user():
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
+@app.route('/users',methods=["GET", "POST"])
+def handle_users():
+    '''this function return users'''
+    
+    try:
+        
+        json_messages = {}
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user in List_Of_Users:
+
+            id, user_db, nft_hash, percentage = user
+            json_messages[id] = {'user' : user_db,'nft' : nft_hash,'percentage' : percentage}
+
+        Response = {'Code':200 , 'users': json_messages}
+        return jsonify(Response)      
+
+    except:
+        
+        ret = {'status':'failed','error':'connect to database failed'}
+        return jsonify(ret)
+
+@app.route('/winners',methods=["GET", "POST"])
+def handle_winners():
+    '''this function return users'''
+    
+    try:
+        
+        json_messages = {}
+        List_Of_Winers = MYSQL_DB.read_winners_from_database(CONFIG.SOURCE)
+        for winer in List_Of_Winers:
+
+            id, user, winner_wallet = winer
+            json_messages[id] = {'winner' : winner_wallet}
+
+        Response = {'Code':200 , 'users': json_messages}
+        return jsonify(Response)      
+
+    except:
+        
+        ret = {'status':'failed','error':'connect to database failed'}
+        return jsonify(ret)
+
 @app.route('/messages',methods=["GET", "POST"])
 def handle_messages():
     '''this function return one user messages'''
@@ -195,12 +237,18 @@ def handle_level_six_pass():
         try:
 
             if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
+
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
-                #TODO
-                Send_Email(user)
-                ret = {'status':'ok','code':'200'}
-                return jsonify(ret)
-        
+                if Send_Winner(user):
+                    
+                    ret = {'status':'ok','code':'200'}
+                    return jsonify(ret)
+
+                else:
+
+                    ret = {'status':'failed','error':'connect to database failed'}
+                    return jsonify(ret)
+
         except:
 
             ret = {'status':'failed','error':'user didnt pass level4'}
@@ -209,9 +257,21 @@ def handle_level_six_pass():
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
-def Send_Email(user):
-    #TODO
-    pass
+def Send_Winner(user):
+    '''this function send message to winner'''
+    
+    admin_user = CONFIG.SOURCE
+    message = f"Top Secret! ,congratulations dear, you have done all levels! ,please send your wallet address : [{user}] code to [Greatspa81@gmail.com]."
+
+    try:
+        
+        MYSQL_DB.write_user_message(user,message)
+        MYSQL_DB.write_user_message(admin_user,user) # set winner - internal rule
+        return True
+
+    except:
+
+        return False
 
 def Check_User(user,nfthash):
     #TODO
