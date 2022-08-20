@@ -45,6 +45,23 @@ def write_user_to_database(user,nfthash):
     db.close()    
     return True
 
+def read_users_from_database():
+    '''this function return all users informations'''
+    db = connect_to_database()
+    cur = db.cursor()
+    qury = f' select * from users;'
+    cur.execute(qury)
+    db.close()
+    return cur.fetchall()
+
+def read_winners_from_database(source):
+    '''this function return winners wallets '''
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute(f'SELECT * FROM Messages where user = "{source}";')
+    db.close()
+    return cur.fetchall()
+
 def read_users_messages():
     '''this function return user messages from database'''
     db = connect_to_database()
