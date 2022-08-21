@@ -31,6 +31,7 @@ def handle_create_user():
     '''this function create user after check'''
     if request.method == 'POST':
         user = request.json["user"]
+        nfthash = request.json["nfthash"]
         try :
             if Check_User(user):
                 if MYSQL_DB.write_user_to_database(user,nfthash):
