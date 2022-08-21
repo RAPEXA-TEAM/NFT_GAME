@@ -3,12 +3,12 @@
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
+from web3 import Web3
 import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
 
 app = Flask(__name__)
-#@limiter.limit("5 per minute")
+w3 = Web3(Web3.HTTPProvider(CONFIG.W3_PROVIDER))
 
 # config
 app.config.update(
@@ -33,7 +33,6 @@ def handle_create_user():
         user = request.json["user"]
         nfthash = request.json["nfthash"]
         try :
-            #TODO
             if Check_User(user,nfthash):
                 if MYSQL_DB.write_user_to_database(user,nfthash):
                     ret = {'status':'ok','code':'200'}
@@ -298,8 +297,14 @@ def Send_Winner(user):
         return False
 
 def Check_User(user,nfthash):
-    #TODO
-    pass
+    '''This function check user address and user nft to validate user'''
+    contract = w3.eth.contract(address = CONFIG.CONTRACT_ADDRESS , abi = CONFIG.CONTRACT_ABI)
+    BalanceOfUser = contract.functions.balanceOf(user).call()
+    format_eth = w3.fromWei(BalanceOfUser, 'ether')
+    if format_eth > 0:
+        return True
+    else:
+        return False
 
 if __name__ == "__main__":
     app.run("0.0.0.0",5000,debug=True)
