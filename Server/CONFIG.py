@@ -28,15 +28,7 @@ LEVEL5_CODE = "d9c9ec77c2377df2be249eabc9413905ca5960608ade94d667497102b12942ba"
 LEVEL6_CODE = "b5f9c2da0c206aee28ab92cfc00cdb1e97d01c8987f1bb7c9f4735ddf4d13a8b"
 
 # Web3
-
-W3_PROVIDER = ""
+#TODO
+W3_PROVIDER = "https://eth-mainnet.public.blastapi.io"
 CONTRACT_ADDRESS = ""
-CONTRACT_ABI = """[
-    {
-        constant: true,
-        inputs: [{name: "_owner", type: "address"}],
-        name: "balanceOf",
-        outputs: [{name: "balance", type: "uint256"}],
-        type: "function",
-    },
-]"""
+CONTRACT_ABI = ""

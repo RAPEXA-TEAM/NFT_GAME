@@ -31,9 +31,8 @@ def handle_create_user():
     '''this function create user after check'''
     if request.method == 'POST':
         user = request.json["user"]
-        nfthash = request.json["nfthash"]
         try :
-            if Check_User(user,nfthash):
+            if Check_User(user):
                 if MYSQL_DB.write_user_to_database(user,nfthash):
                     ret = {'status':'ok','code':'200'}
                     return jsonify(ret)
@@ -296,15 +295,15 @@ def Send_Winner(user):
 
         return False
 
-def Check_User(user,nfthash):
+def Check_User(user):
+    #TODO
     '''This function check user address and user nft to validate user'''
     contract = w3.eth.contract(address = CONFIG.CONTRACT_ADDRESS , abi = CONFIG.CONTRACT_ABI)
     BalanceOfUser = contract.functions.balanceOf(user).call()
-    format_eth = w3.fromWei(BalanceOfUser, 'ether')
-    if format_eth > 0:
-        return True
-    else:
+    if BalanceOfUser == 0:
         return False
+    else:
+        return True
 
 if __name__ == "__main__":
     app.run("0.0.0.0",5000,debug=True)
