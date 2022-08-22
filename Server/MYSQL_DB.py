@@ -39,7 +39,7 @@ def write_user_to_database(user,nfthash):
     '''this function create user on database'''
     db = connect_to_database()
     cur = db.cursor()                       
-    qury = f'INSERT INTO Users (id, user, nfthash, percentage) VALUES (null, "{user}", "{nfthash}", 0);'
+    qury = f'INSERT INTO Users (id, user, nfthash, percentage) VALUES (null, "{user}", "{nfthash}", 10);'
     cur.execute(qury)
     db.commit()
     db.close()    
@@ -74,9 +74,9 @@ def write_user_message(user,msg):
     '''this function write user messages to database'''
     db = connect_to_database()
     cur = db.cursor()
-    cur.execute(f'INSERT INTO message (id, user, message) VALUES (null, "{user}", "{msg}");')
+    cur.execute(f'INSERT INTO messages (id, user, message) VALUES (null, "{user}", "{msg}");')
+    db.commit()
     db.close()
-    return cur.fetchall()
 
 def Make_Database():
     '''This function make database'''

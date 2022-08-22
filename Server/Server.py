@@ -297,7 +297,6 @@ def Send_Winner(user):
         return False
 
 def Check_User(user):
-    #TODO
     '''This function check user address and user nft to validate user'''
     contract = w3.eth.contract(address = CONFIG.CONTRACT_ADDRESS , abi = CONFIG.CONTRACT_ABI)
     BalanceOfUser = contract.functions.balanceOf(user).call()
