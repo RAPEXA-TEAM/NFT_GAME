@@ -160,10 +160,18 @@ def handle_level_one_pass():
     '''This function pass level1 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
-        ret = {'status':'ok','code':'200'}
-        return jsonify(ret)
-    
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user_dbb in List_Of_Users:
+            id, user_db, nft_hash, percentage = user_dbb
+            if user_db == user:
+
+                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
+                ret = {'status':'ok','code':'200'}
+                return jsonify(ret)
+
+            ret = {'status':'failed','error':'user not valid'}
+            return jsonify(ret)
+
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
@@ -172,17 +180,16 @@ def handle_level_two_pass():
     '''This function pass level2 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
-        try:
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user_dbb in List_Of_Users:
+            id, user_db, nft_hash, percentage = user_dbb
+            if user_db == user:
 
-            if user_last_level[0][2] == CONFIG.LEVEL1_CODE:
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
-        
-        except:
 
-            ret = {'status':'failed','error':'user didnt pass level1'}
+            ret = {'status':'failed','error':'user not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -193,17 +200,16 @@ def handle_level_three_pass():
     '''This function pass level3 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
-        try:
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user_dbb in List_Of_Users:
+            id, user_db, nft_hash, percentage = user_dbb
+            if user_db == user:
 
-            if user_last_level[1][2] == CONFIG.LEVEL2_CODE:
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
-        
-        except:
 
-            ret = {'status':'failed','error':'user didnt pass level2'}
+            ret = {'status':'failed','error':'user not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -214,17 +220,16 @@ def handle_level_four_pass():
     '''This function pass level4 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
-        try:
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user_dbb in List_Of_Users:
+            id, user_db, nft_hash, percentage = user_dbb
+            if user_db == user:
 
-            if user_last_level[2][2] == CONFIG.LEVEL3_CODE:
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
-        
-        except:
 
-            ret = {'status':'failed','error':'user didnt pass level3'}
+            ret = {'status':'failed','error':'user not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -235,17 +240,16 @@ def handle_level_five_pass():
     '''This function pass level5 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
-        try:
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user_dbb in List_Of_Users:
+            id, user_db, nft_hash, percentage = user_dbb
+            if user_db == user:
 
-            if user_last_level[3][2] == CONFIG.LEVEL4_CODE:
                 MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
-        
-        except:
 
-            ret = {'status':'failed','error':'user didnt pass level4'}
+            ret = {'status':'failed','error':'user not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -260,17 +264,24 @@ def handle_level_six_pass():
         try:
 
             if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
+                List_Of_Users = MYSQL_DB.read_users_from_database()
+                for user_dbb in List_Of_Users:
+                    id, user_db, nft_hash, percentage = user_dbb
+                    if user_db == user:
 
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL6,CONFIG.LEVEL6_CODE)
-                if Send_Winner(user):
-                    
-                    ret = {'status':'ok','code':'200'}
-                    return jsonify(ret)
+                        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
+                        if Send_Winner(user):
+                            
+                            ret = {'status':'ok','code':'200'}
+                            return jsonify(ret)
 
-                else:
+                        else:
 
-                    ret = {'status':'failed','error':'connect to database failed'}
-                    return jsonify(ret)
+                            ret = {'status':'failed','error':'connect to database failed'}
+                            return jsonify(ret)
+                
+                ret = {'status':'failed','error':'user not valid'}
+                return jsonify(ret)
 
         except:
 

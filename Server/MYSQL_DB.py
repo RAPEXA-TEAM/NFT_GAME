@@ -94,6 +94,12 @@ def Make_Database():
     cur.execute(qury)
     db.commit()
     db.close()
+    db = connect_to_database()
+    cur = db.cursor()                       
+    qury = "DROP TABLE IF EXISTS timestamps;"
+    cur.execute(qury)
+    db.commit()
+    db.close()
     print("[+] Drop all tables")
     db = connect_to_database()
     cur = db.cursor()                       
