@@ -63,7 +63,7 @@ def handle_users():
             id, user_db, nft_hash, percentage = user
             json_messages[id] = {'user' : user_db,'nft' : nft_hash,'percentage' : percentage}
 
-        Response = {'Code':200 , 'users': json_messages}
+        Response = {'Code':"200" , 'users': json_messages}
         return jsonify(Response)      
 
     except:
@@ -73,7 +73,7 @@ def handle_users():
 
 @app.route('/winners',methods=["GET", "POST"])
 def handle_winners():
-    '''this function return users'''
+    '''this function return winners'''
     
     try:
         
@@ -84,7 +84,7 @@ def handle_winners():
             id, user, winner_wallet = winer
             json_messages[id] = {'winner' : winner_wallet}
 
-        Response = {'Code':200 , 'users': json_messages}
+        Response = {'Code':"200" , 'users': json_messages}
         return jsonify(Response)      
 
     except:
@@ -103,12 +103,12 @@ def handle_messages():
             id_db, user_db, message_db = message
             
             if message_db != CONFIG.SOURCE:
-                json_messages[id_db] = {'Message' : message_db}
+                json_messages[id_db] = {'user' : user_db , 'Message' : message_db}
             
             else :
                 continue
 
-        Response = {'Code':200 , 'Messages': json_messages}
+        Response = {'Code':"200" , 'Messages': json_messages}
         return jsonify(Response)      
 
     except:
@@ -117,7 +117,7 @@ def handle_messages():
         return jsonify(ret)
 
 @app.route('/my_messages',methods=["GET", "POST"])
-def handle_messages():
+def handle_my_messages():
     '''this function return one user messages'''
     if request.method == 'POST':
         user = request.json["user"]
@@ -128,7 +128,7 @@ def handle_messages():
             if user_db == user:
                 json_messages[id_db] = {'Message' : message_db}
         
-        Response = {'Code':200 , 'Messages': json_messages}
+        Response = {'Code':"200" , 'Messages': json_messages}
         return jsonify(Response)      
 
     ret = {'status':'failed','error':'requests not valid'}
