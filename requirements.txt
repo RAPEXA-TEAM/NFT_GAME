@@ -16,12 +16,12 @@ Deprecated==1.2.13
 ElasticEmail @ git+https://github.com/elasticemail/elasticemail-python.git@c6c5016849b2527716a24b591874bb5052cb937a
 eth-abi==2.2.0
 eth-account==0.5.9
-eth-hash==0.5.0
+eth-hash
 eth-keyfile==0.5.1
 eth-keys==0.3.4
 eth-rlp==0.2.1
 eth-typing==2.3.0
-eth-utils==1.10.0
+eth-utils
 Flask==2.2.2
 Flask-Limiter==2.6.0
 frozenlist==1.3.1
