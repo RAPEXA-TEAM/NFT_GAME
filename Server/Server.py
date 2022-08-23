@@ -285,7 +285,7 @@ def handle_level_six_pass():
 
         except:
 
-            ret = {'status':'failed','error':'user didnt pass level4'}
+            ret = {'status':'failed','error':'user didnt pass level 5'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}

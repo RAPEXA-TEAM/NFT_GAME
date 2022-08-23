@@ -121,7 +121,7 @@ def read_winners(base_url):
     print("[+] Test (read winners) done.")
 
 if __name__ == "__main__":
-    #ok(base_url)
+    ok(base_url)
     create_user(base_url,user,nft_hash)
     read_users(base_url)
     Send_message(base_url,user)
