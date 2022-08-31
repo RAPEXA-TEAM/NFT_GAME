@@ -14,7 +14,7 @@
 
 ## only admin
 
--   ok()
+-   ok()                                #first call
 -   Send_message(UserWalletAddress)
 -   read_all_messages()
 -   read_users()
@@ -25,13 +25,17 @@
 ```
 
 -	ok: {
-		Method: GET
-		Parameters:{}
+		Method: POST
+		Parameters:{
+			password,
+		}
         Outputs: {
             {'code':'200', 'status':'ok'},
+			{'status':'failed','error':'password incorrect!'},
+			{'status':'failed','error':'requests not valid'},
             }
 		Description: {
-            This EndPoint check system is ok or not.
+            This EndPoint check password for login admin.
          }
 	}
 

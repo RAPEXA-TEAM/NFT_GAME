@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from web3 import Web3
+import hashlib
 import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
 
@@ -20,10 +21,21 @@ limiter = Limiter(
     key_func=get_remote_address,
 )
 
-@app.route("/ok")
+@app.route("/ok",methods=["GET", "POST"])
 def sys_check():
     '''this function check system'''
-    ret = {'status':'ok','code':'200'}
+    if request.method == 'POST':
+        password = request.json["pass"]
+        hash_pass = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        if hash_pass == CONFIG.HASHPASS :
+        
+            ret = {'status':'ok','code':'200'}
+            return jsonify(ret)
+        
+        ret = {'status':'failed','error':'password incorrect!'}
+        return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
 @app.route('/create_user',methods=["GET", "POST"])
@@ -240,30 +252,10 @@ def handle_level_five_pass():
     '''This function pass level5 of games for one user'''
     if request.method == 'POST':
         user = request.json["user"]
-        List_Of_Users = MYSQL_DB.read_users_from_database()
-        for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
-
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
-                ret = {'status':'ok','code':'200'}
-                return jsonify(ret)
-
-            ret = {'status':'failed','error':'user not valid'}
-            return jsonify(ret)
-
-    ret = {'status':'failed','error':'requests not valid'}
-    return jsonify(ret)
-
-@app.route(f'/{CONFIG.LEVEL6_CODE}',methods=["GET", "POST"])
-def handle_level_six_pass():
-    '''This function pass level6 of games for one user'''
-    if request.method == 'POST':
-        user = request.json["user"]
         user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
         try:
 
-            if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
+            if user_last_level[3][2] == CONFIG.LEVEL4_CODE:
                 List_Of_Users = MYSQL_DB.read_users_from_database()
                 for user_dbb in List_Of_Users:
                     id, user_db, nft_hash, percentage = user_dbb

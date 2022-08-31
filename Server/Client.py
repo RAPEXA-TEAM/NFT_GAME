@@ -10,13 +10,16 @@ import os
 base_url = "http://127.0.0.1:5000"
 user = "0xC883A79E8e4594C4f89434EDb754a10Da2311139"
 nft_hash = "e50b08fa1a1ceeec6bc85381020e99eb"
+password = '1234' 
 
-def ok(base_url):
-    print("[+] Test Server start.")
+def ok(base_url,password):
+    print("[+] Test basic login Server start.")
     route = "/ok"
-    r = requests.get(url =base_url+route)
+    aa = {'pass':password}
+    print(f"[+] Test basic login Server with password : {password}")
+    r = requests.post(url = base_url+route, json=aa)
     print(f"[+] response : {r.text}")
-    print("[+] Test Server done.")
+    print("[+] Test basic login Server done.")
 
 def create_user(base_url,user,nft_hash):
     print("[+] Test (Create user) start.")
@@ -104,15 +107,6 @@ def pass_level5(base_url,user):
     print(f"[+] response : {r.text}")
     print("[+] Test (Pass Level 5) done.")
 
-def pass_level6(base_url,user):
-    print("[+] Test (Pass Level 6) start.")
-    route = "/b5f9c2da0c206aee28ab92cfc00cdb1e97d01c8987f1bb7c9f4735ddf4d13a8b"
-    aa = {'user':user}
-    print(f"[+] Test (Pass Level 6) for [{user}].")
-    r = requests.post(url = base_url+route, json=aa)
-    print(f"[+] response : {r.text}")
-    print("[+] Test (Pass Level 6) done.")
-
 def read_winners(base_url):
     print("[+] Test (read winners) start.")
     route = "/winners"
@@ -121,19 +115,18 @@ def read_winners(base_url):
     print("[+] Test (read winners) done.")
 
 if __name__ == "__main__":
-    ok(base_url)
-    create_user(base_url,user,nft_hash)
-    read_users(base_url)
-    Send_message(base_url,user)
-    read_user_messages(base_url,user)
-    read_all_messages(base_url)
-    pass_level1(base_url,user)
-    pass_level2(base_url,user)
-    pass_level3(base_url,user)
-    pass_level4(base_url,user)
-    pass_level5(base_url,user)
-    pass_level6(base_url,user)
-    read_user_messages(base_url,user)
-    read_winners(base_url)
-    print("[+] Test done.")
-    os.system('python MYSQL_DB.py execute')
+    ok(base_url,password)
+    #create_user(base_url,user,nft_hash)
+    #read_users(base_url)
+    #Send_message(base_url,user)
+    #read_user_messages(base_url,user)
+    #read_all_messages(base_url)
+    #pass_level1(base_url,user)
+    #pass_level2(base_url,user)
+    #pass_level3(base_url,user)
+    #pass_level4(base_url,user)
+    #pass_level5(base_url,user)
+    #read_user_messages(base_url,user)
+    #read_winners(base_url)
+    #print("[+] Test done.")
+    #os.system('python MYSQL_DB.py execute')
