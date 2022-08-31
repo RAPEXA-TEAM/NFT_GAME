@@ -166,6 +166,46 @@ def handle_send_message():
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
+@app.route('/book',methods=["GET", "POST"])
+def handle_book():
+    '''this function return users'''
+    if request.method == "POST":
+
+        user_json = request.json["user"]
+        
+        try:
+            
+            List_Of_Users = MYSQL_DB.read_users_from_database()
+            for user in List_Of_Users:
+                id, user_db, nft_hash, percentage = user
+                
+                if user_json == user_db and percentage == CONFIG.LEVEL1:
+                    Response = {'Code':"200" , 'text': f"{CONFIG.LEVEL1_TEXT}"}
+                    return jsonify(Response)
+
+                if user_json == user_db and percentage == CONFIG.LEVEL2:
+                    Response = {'Code':"200" , 'text': f"{CONFIG.LEVEL1_TEXT} | {CONFIG.LEVEL2_TEXT}"}
+                    return jsonify(Response)
+
+                if user_json == user_db and percentage == CONFIG.LEVEL3:
+                    Response = {'Code':"200" , 'text': f"{CONFIG.LEVEL1_TEXT} | {CONFIG.LEVEL2_TEXT} | {CONFIG.LEVEL3_TEXT}"}
+                    return jsonify(Response)
+
+                if user_json == user_db and percentage == CONFIG.LEVEL4:
+                    Response = {'Code':"200" , 'text': f"{CONFIG.LEVEL1_TEXT} | {CONFIG.LEVEL2_TEXT} | {CONFIG.LEVEL3_TEXT} | {CONFIG.LEVEL4_TEXT}"}
+                    return jsonify(Response)
+        
+                if user_json == user_db and percentage == CONFIG.LEVEL5:
+                    Response = {'Code':"200" , 'text': f"{CONFIG.LEVEL1_TEXT} | {CONFIG.LEVEL2_TEXT} | {CONFIG.LEVEL3_TEXT} | {CONFIG.LEVEL4_TEXT} | {CONFIG.LEVEL5_TEXT}"}
+                    return jsonify(Response)
+
+        except:
+            
+            ret = {'status':'failed','error':'connect to database failed'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL1_CODE}',methods=["GET", "POST"])
 def handle_level_one_pass():

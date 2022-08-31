@@ -14,7 +14,7 @@
 
 ## only admin
 
--   ok()                                #first call
+-   ok(password)                                #first call
 -   Send_message(UserWalletAddress)
 -   read_all_messages()
 -   read_users()
@@ -23,6 +23,25 @@
 ######
 
 ```
+-	book: {
+		Method: POST
+		Parameters: {
+			user,
+		}
+        Outputs: {
+			{'status':'failed','error':'requests not valid'},
+			{'status':'failed','error':'connect to database failed'},
+			{'Code':"200" , 'text': "[LEVEL1_TEXT]"},
+			{'Code':"200" , 'text': "[LEVEL1_TEXT] | [LEVEL2_TEXT]"},
+			{'Code':"200" , 'text': "[LEVEL1_TEXT] | [LEVEL2_TEXT] | [LEVEL3_TEXT]"},
+			{'Code':"200" , 'text': "[LEVEL1_TEXT] | [LEVEL2_TEXT] | [LEVEL3_TEXT] | [LEVEL4_TEXT]"},
+			{'Code':"200" , 'text': "[LEVEL1_TEXT] | [LEVEL2_TEXT] | [LEVEL3_TEXT] | [LEVEL4_TEXT] | DONE"},
+        }
+		Description: {
+            This EndPoint send each user book according to their level in game.
+		}
+	}
+}
 
 -	ok: {
 		Method: POST
