@@ -1,5 +1,5 @@
 #!/usr/bin/env
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, render_template
 import requests
 import hashlib
 import MYSQL_DB   #MYSQL MANAGER
@@ -11,6 +11,28 @@ app = Flask(__name__)
 app.config.update(
     SECRET_KEY = CONFIG.SECRET_KEY
 )
+
+FLUTTER_WEB_APP = 'templates'
+
+@app.route('/web')
+def render_page_web():
+    return render_template('index.html')
+
+@app.route('/web/<path:name>')
+def return_flutter_doc(name):
+
+    datalist = str(name).split('/')
+    DIR_NAME = FLUTTER_WEB_APP
+
+    if len(datalist) > 1:
+        for i in range(0, len(datalist) - 1):
+            DIR_NAME += '/' + datalist[i]
+
+    return send_from_directory(DIR_NAME, datalist[-1])
+
+@app.route('/')
+def render_page():
+    return render_template('/index.html')
 
 @app.route("/ok",methods=["GET", "POST"])
 def sys_check():
