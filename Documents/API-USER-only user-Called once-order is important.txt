@@ -1,0 +1,62 @@
+## only user - Called once - order is important
+
+#CREATE USER
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/create_user
+
+{"status": "ok", "code": "200"}
+{"status": "failed", "error": "writing user to database"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#PASS LEVEL 2
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/de96871ca5ea490075a009ebd50177a6210cc91186f145db7ec20093f881bee3
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#PASS LEVEL 3
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/5e472b3f5aa7f44438b3d83fd72ee3fbf4411e88ced3e045d748176fb3e4403f
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#PASS LEVEL 1
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/6e30d713bb138b798061ce581b23ecbc23eda84b7676820b5729cbe2035c9fdb
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#PASS LEVEL 4
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/f25d0521e7fa4ef8cbd04ff2c6fe674c5d30c3ce194565a18002280fa51b5e67
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#PASS LEVEL 5
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/b5f9c2da0c206aee28ab92cfc00cdb1e97d01c8987f1bb7c9f4735ddf4d13a8b
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "user not valid"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------

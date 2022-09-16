@@ -1,0 +1,24 @@
+## only user - called every time refreshing app
+
+#USER MESSAGES
+
+POST : {"TokenID": "4560"} , thefarameta.com/my_messages
+
+{"Code": "200", "Messages": {"0": {"Message": "TEST"}}}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#BOOK
+
+POST : {"TokenID": "4560" , "Device": "L"} , thefarameta.com/book
+
+{"status": "failed", "error": "requests not valid"},
+{"status": "failed", "error": "connect to database failed"},
+{"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H"},
+{"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H" , "level2": "https://drive.google.com/uc?id=1N9qMs8x7GYzCFaYQzbgz21Vn5gOvWjw0"},
+{"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H" , "level2": "https://drive.google.com/uc?id=1N9qMs8x7GYzCFaYQzbgz21Vn5gOvWjw0" , "level3": "https://drive.google.com/uc?id=1rrB8Honzs1hZZosVCOeNrQEGO1sm3R6-"},
+{"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H" , "level2": "https://drive.google.com/uc?id=1N9qMs8x7GYzCFaYQzbgz21Vn5gOvWjw0" , "level3": "https://drive.google.com/uc?id=1rrB8Honzs1hZZosVCOeNrQEGO1sm3R6-" , "level4": "https://drive.google.com/uc?id=1W3HMsM1RoAZIHgMoNzTq1JAAMEDLdnp7"},
+{"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H" , "level2": "https://drive.google.com/uc?id=1N9qMs8x7GYzCFaYQzbgz21Vn5gOvWjw0" , "level3": "https://drive.google.com/uc?id=1rrB8Honzs1hZZosVCOeNrQEGO1sm3R6-" , "level4": "https://drive.google.com/uc?id=1W3HMsM1RoAZIHgMoNzTq1JAAMEDLdnp7" , "level5": "https://drive.google.com/uc?id=1HpyaH5alXL2GETTU6vG29bhX5KHri2bf"},
+
+#------------------------------------------------------
