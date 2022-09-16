@@ -1,5 +1,6 @@
 #!/usr/bin/env
 from flask import Flask, request, jsonify, send_from_directory, render_template
+import json
 import requests
 import hashlib
 import MYSQL_DB   #MYSQL MANAGER
@@ -82,14 +83,16 @@ def handle_users():
     try:
         
         json_messages = {}
+        json_array = []
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user in List_Of_Users:
 
             id, user_db, TokenID, percentage = user
             json_messages[id] = {'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}
+            json_array.append(json.dumps([user_db,TokenID,percentage]))
 
         Response = {'Code':"200" , 'users': json_messages}
-        return jsonify(Response)      
+        return jsonify(json_array)      
 
     except:
         
@@ -112,9 +115,10 @@ def handle_winners():
                 id, user_db, TokenIDus, percentage = user
                 if TokenID == TokenIDus:
                     json_messages[id] = {'TokenID' : TokenID, 'user' : user_db}
+                    jsonStr = json.dumps([user_db,TokenID])
 
         Response = {'Code':"200" , 'users': json_messages}
-        return jsonify(Response)      
+        return jsonify(jsonStr)     
 
     except:
         
@@ -127,18 +131,20 @@ def handle_messages():
     try:
 
         json_messages = {}
+        jsonStr = []
         List_Of_Messages = MYSQL_DB.read_users_messages()
         for message in List_Of_Messages:
             id_db, TokenID, message_db = message
             
-            if message_db != CONFIG.SOURCE:
+            if TokenID != CONFIG.SOURCE:
                 json_messages[id_db] = {'TokenID' : TokenID , 'Message' : message_db}
+                jsonStr.append(json.dumps([TokenID,message_db]))
             
             else :
                 continue
 
         Response = {'Code':"200" , 'Messages': json_messages}
-        return jsonify(Response)      
+        return jsonify(jsonStr)      
 
     except:
         
@@ -151,14 +157,16 @@ def handle_my_messages():
     if request.method == 'POST':
         TokenID = request.json["TokenID"]
         json_messages = {}
+        json_array = []
         List_Of_Messages = MYSQL_DB.read_users_messages()
         for message in List_Of_Messages:
             id_db, user_db, message_db = message
             if user_db == TokenID:
                 json_messages[id_db] = {'Message' : message_db}
-        
+                json_array.append(json.dumps(message_db))
+
         Response = {'Code':"200" , 'Messages': json_messages}
-        return jsonify(Response)      
+        return jsonify(json_array)      
 
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)

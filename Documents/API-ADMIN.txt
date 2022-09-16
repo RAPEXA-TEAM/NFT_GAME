@@ -23,6 +23,8 @@ POST : {"TokenID": "4560", "message": "TEST"} , thefarameta.com/Send_message
 
 GET : thefarameta.com/all_messages
 
+["[\"4560\", \"TEST\"]","[\"4560\", \"Top Secret! ,congratulations dear, you have done all levels! ,please send [4560] code to [Greatspa81@gmail.com].\"]"]
+
 {"Code": "200", "Messages": {"0" = {"TokenID": "4560", "Message": "TEST"}}}
 {"status": "failed", "error": "connect to database failed"}
 
@@ -32,6 +34,8 @@ GET : thefarameta.com/all_messages
 
 GET : thefarameta.com/users
 
+["[\"0x6B957a2791f6e88C99Ca0e58d866075430Daf31D\", \"4560\", 100]"]
+
 {"Code": "200", "users": {"0": {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID" : "4560", "percentage": "10"}}},
 {"status": "failed", "error": "connect to database failed"},
 
@@ -40,6 +44,8 @@ GET : thefarameta.com/users
 #RETURN ALL WINNERS ON DATABASE
 
 GET : thefarameta.com/winners
+
+"[\"0x6B957a2791f6e88C99Ca0e58d866075430Daf31D\", \"4560\"]"
 
 {"Code": "200", "users": {"0": {"TokenID": "4560", "user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D"}}},
 {"status": "failed", "error": "connect to database failed"},
