@@ -11,7 +11,7 @@ POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"}
 
 #------------------------------------------------------
 
-#PASS LEVEL 2
+#PASS LEVEL 1
 
 POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/de96871ca5ea490075a009ebd50177a6210cc91186f145db7ec20093f881bee3
 
@@ -21,7 +21,7 @@ POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"}
 
 #------------------------------------------------------
 
-#PASS LEVEL 3
+#PASS LEVEL 2
 
 POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/5e472b3f5aa7f44438b3d83fd72ee3fbf4411e88ced3e045d748176fb3e4403f
 
@@ -31,7 +31,7 @@ POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"}
 
 #------------------------------------------------------
 
-#PASS LEVEL 1
+#PASS LEVEL 3
 
 POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/6e30d713bb138b798061ce581b23ecbc23eda84b7676820b5729cbe2035c9fdb
 
