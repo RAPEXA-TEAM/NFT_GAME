@@ -4,7 +4,7 @@
 
 POST : {"TokenID": "4560"} , thefarameta.com/my_messages
 
-["[\"TEST\"]"]
+["{\"Message\": \"TEST\"}"]
 
 {"Code": "200", "Messages": {"0": {"Message": "TEST"}}}
 {"status": "failed", "error": "requests not valid"}

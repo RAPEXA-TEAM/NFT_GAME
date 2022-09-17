@@ -89,7 +89,7 @@ def handle_users():
 
             id, user_db, TokenID, percentage = user
             json_messages[id] = {'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}
-            json_array.append(json.dumps([user_db,TokenID,percentage]))
+            json_array.append(json.dumps({'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}))
 
         Response = {'Code':"200" , 'users': json_messages}
         return jsonify(json_array)      
@@ -115,7 +115,7 @@ def handle_winners():
                 id, user_db, TokenIDus, percentage = user
                 if TokenID == TokenIDus:
                     json_messages[id] = {'TokenID' : TokenID, 'user' : user_db}
-                    jsonStr = json.dumps([user_db,TokenID])
+                    jsonStr = json.dumps({'TokenID' : TokenID, 'user' : user_db})
 
         Response = {'Code':"200" , 'users': json_messages}
         return jsonify(jsonStr)     
@@ -138,7 +138,7 @@ def handle_messages():
             
             if TokenID != CONFIG.SOURCE:
                 json_messages[id_db] = {'TokenID' : TokenID , 'Message' : message_db}
-                jsonStr.append(json.dumps([TokenID,message_db]))
+                jsonStr.append(json.dumps({'TokenID' : TokenID , 'Message' : message_db}))
             
             else :
                 continue
@@ -163,7 +163,7 @@ def handle_my_messages():
             id_db, user_db, message_db = message
             if user_db == TokenID:
                 json_messages[id_db] = {'Message' : message_db}
-                json_array.append(json.dumps(message_db))
+                json_array.append(json.dumps({'Message' : message_db}))
 
         Response = {'Code':"200" , 'Messages': json_messages}
         return jsonify(json_array)      
