@@ -21,10 +21,15 @@ app.config.update(
 
 FLUTTER_WEB_APP = 'templates'
 
-@app.route('/random_tokenid')
+@app.route('/random_tokenid/06a750fd114f5fed65a8f507d0815666')
 def handle_random_tokenid():
-    '''this function return random tokenid''' #TODO:do this 
-    print(list_tokens)
+    '''this function return random tokenid''' 
+    adad = random.choice(list_tokens)
+    index = list_tokens.index(adad)
+    list_tokens.pop(index)
+    ret = {'status':'ok','code': str(adad)}
+    return jsonify(ret)
+
 
 @app.route('/login',methods=["GET", "POST"])
 def handle_check_tokenid():
@@ -444,4 +449,4 @@ def Check_User(user,TokenID):
         return False
 
 if __name__ == "__main__":
-    app.run("0.0.0.0",5511,debug=False)
+    app.run("0.0.0.0",80,debug=False)
