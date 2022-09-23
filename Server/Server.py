@@ -24,7 +24,7 @@ def handle_random_tokenid():
     adad = random.choice(list_tokens)
     index = list_tokens.index(adad)
     list_tokens.pop(index)
-    ret = {'status':'ok','code': str(adad)}
+    ret = {'status':'ok','TokenID': str(adad)}
     return jsonify(ret)
 
 
