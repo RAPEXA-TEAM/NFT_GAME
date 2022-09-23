@@ -9,9 +9,6 @@ import CONFIG     #SERVER CONGIG
 
 list_tokens = []
 
-for i in range(0,36001):
-    list_tokens.append(i)
-
 app = Flask(__name__)
 
 # config
@@ -448,5 +445,25 @@ def Check_User(user,TokenID):
     except:
         return False
 
+def check_used_tokenids():
+    '''this function remove all used tokenids before reboot '''
+    
+    used_tokenids = []
+    List_Of_Users = MYSQL_DB.read_users_from_database()
+    for user in List_Of_Users:
+        id, user_db, TokenID, percentage = user
+        used_tokenids.append(int(TokenID))
+
+    for token in range(0,36001):
+    
+        if token not in used_tokenids:
+            list_tokens.append(token)
+    
+        else: 
+            continue
+
+    return True
+
 if __name__ == "__main__":
+    check_used_tokenids()
     app.run("0.0.0.0",80,debug=False)
