@@ -3,8 +3,14 @@ from flask import Flask, request, jsonify, send_from_directory, render_template
 import json
 import requests
 import hashlib
+import random
 import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
+
+list_tokens = []
+
+for i in range(0,36001):
+    list_tokens.append(i)
 
 app = Flask(__name__)
 
@@ -14,6 +20,30 @@ app.config.update(
 )
 
 FLUTTER_WEB_APP = 'templates'
+
+@app.route('/random_tokenid')
+def handle_random_tokenid():
+    '''this function return random tokenid''' #TODO:do this 
+    print(list_tokens)
+
+@app.route('/login',methods=["GET", "POST"])
+def handle_check_tokenid():
+    '''this function check user and tokenid'''
+    if request.method == 'POST':
+        user = request.json["user"]
+        TokenID = request.json["TokenID"]
+        if Check_User(user,TokenID) :
+
+            ret = {'status':'ok','code':'200'}
+            return jsonify(ret) 
+
+        else :
+            
+            ret = {'status':'failed','error':'user not exist'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route('/web')
 def render_page_web():

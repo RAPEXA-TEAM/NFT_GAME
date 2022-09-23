@@ -142,4 +142,4 @@ if __name__ == "__main__":
     read_user_messages(base_url,TokenID)
     read_winners(base_url)
     print("[+] Test done.")
-    os.system('python MYSQL_DB.py execute')
+    #os.system('python MYSQL_DB.py execute')
