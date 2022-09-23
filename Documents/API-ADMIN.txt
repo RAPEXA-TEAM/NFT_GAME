@@ -1,0 +1,53 @@
+## only admin
+
+#LOGIN ADMIN - CHECK SERVER OK
+
+POST : {"pass": "1234"} , thefarameta.com/ok
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "password incorrect!"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#SEND MESSAGE TO TOKENID
+
+POST : {"TokenID": "4560", "message": "TEST"} , thefarameta.com/Send_message
+
+{"code": "200", "status": "ok"}
+{"status": "failed", "error": "requests not valid"}
+
+#------------------------------------------------------
+
+#RETURN ALL MESSAGE ON DATABASE
+
+GET : thefarameta.com/all_messages
+
+["{\"TokenID\": \"4560\", \"Message\": \"TEST\"}","{\"TokenID\": \"4560\", \"Message\": \"Top Secret! ,congratulations dear, you have done all levels! ,please send [4560] code to [Greatspa81@gmail.com].\"}"]
+
+{"Code": "200", "Messages": {"0" = {"TokenID": "4560", "Message": "TEST"}}}
+{"status": "failed", "error": "connect to database failed"}
+
+#------------------------------------------------------
+
+#RETURN ALL USERS ON DATABASE
+
+GET : thefarameta.com/users
+
+["{\"user\": \"0x6B957a2791f6e88C99Ca0e58d866075430Daf31D\", \"TokenID\": \"4560\", \"percentage\": 100}"]
+
+{"Code": "200", "users": {"0": {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID" : "4560", "percentage": "10"}}},
+{"status": "failed", "error": "connect to database failed"},
+
+#------------------------------------------------------
+
+#RETURN ALL WINNERS ON DATABASE
+
+GET : thefarameta.com/winners
+
+"{\"TokenID\": \"4560\", \"user\": \"0x6B957a2791f6e88C99Ca0e58d866075430Daf31D\"}"
+
+{"Code": "200", "users": {"0": {"TokenID": "4560", "user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D"}}},
+{"status": "failed", "error": "connect to database failed"},
+
+#------------------------------------------------------

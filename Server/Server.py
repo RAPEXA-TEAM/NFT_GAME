@@ -1,29 +1,55 @@
 #!/usr/bin/env
-
-from flask import Flask, request, jsonify
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from web3 import Web3
+from flask import Flask, request, jsonify, send_from_directory, render_template
+import json
+import requests
+import hashlib
 import MYSQL_DB   #MYSQL MANAGER
 import CONFIG     #SERVER CONGIG
 
 app = Flask(__name__)
-w3 = Web3(Web3.HTTPProvider(CONFIG.W3_PROVIDER))
 
 # config
 app.config.update(
     SECRET_KEY = CONFIG.SECRET_KEY
 )
 
-limiter = Limiter(
-    app,
-    key_func=get_remote_address,
-)
+FLUTTER_WEB_APP = 'templates'
 
-@app.route("/ok")
+@app.route('/web')
+def render_page_web():
+    return render_template('index.html')
+
+@app.route('/web/<path:name>')
+def return_flutter_doc(name):
+
+    datalist = str(name).split('/')
+    DIR_NAME = FLUTTER_WEB_APP
+
+    if len(datalist) > 1:
+        for i in range(0, len(datalist) - 1):
+            DIR_NAME += '/' + datalist[i]
+
+    return send_from_directory(DIR_NAME, datalist[-1])
+
+@app.route('/')
+def render_page():
+    return render_template('/index.html')
+
+@app.route("/ok",methods=["GET", "POST"])
 def sys_check():
     '''this function check system'''
-    ret = {'status':'ok','code':'200'}
+    if request.method == 'POST':
+        password = request.json["pass"]
+        hash_pass = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        if hash_pass == CONFIG.HASHPASS :
+        
+            ret = {'status':'ok','code':'200'}
+            return jsonify(ret)
+        
+        ret = {'status':'failed','error':'password incorrect!'}
+        return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
 @app.route('/create_user',methods=["GET", "POST"])
@@ -31,10 +57,10 @@ def handle_create_user():
     '''this function create user after check'''
     if request.method == 'POST':
         user = request.json["user"]
-        nfthash = request.json["nfthash"]
+        TokenID = request.json["TokenID"]
         try :
-            if Check_User(user):
-                if MYSQL_DB.write_user_to_database(user,nfthash):
+            if Check_User(user,TokenID):
+                if MYSQL_DB.write_user_to_database(user,TokenID):
                     ret = {'status':'ok','code':'200'}
                     return jsonify(ret)
                 else :
@@ -57,20 +83,23 @@ def handle_users():
     try:
         
         json_messages = {}
+        json_array = []
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user in List_Of_Users:
 
-            id, user_db, nft_hash, percentage = user
-            json_messages[id] = {'user' : user_db,'nft' : nft_hash,'percentage' : percentage}
+            id, user_db, TokenID, percentage = user
+            json_messages[id] = {'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}
+            json_array.append(json.dumps({'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}))
 
         Response = {'Code':"200" , 'users': json_messages}
-        return jsonify(Response)      
+        return jsonify(json_array)      
 
     except:
         
         ret = {'status':'failed','error':'connect to database failed'}
         return jsonify(ret)
 
+#teturn : tokenid & user
 @app.route('/winners',methods=["GET", "POST"])
 def handle_winners():
     '''this function return winners'''
@@ -79,13 +108,17 @@ def handle_winners():
         
         json_messages = {}
         List_Of_Winers = MYSQL_DB.read_winners_from_database(CONFIG.SOURCE)
+        List_Of_Users = MYSQL_DB.read_users_from_database()
         for winer in List_Of_Winers:
-
-            id, user, winner_wallet = winer
-            json_messages[id] = {'winner' : winner_wallet}
+            id, user, TokenID = winer
+            for user in List_Of_Users:
+                id, user_db, TokenIDus, percentage = user
+                if TokenID == TokenIDus:
+                    json_messages[id] = {'TokenID' : TokenID, 'user' : user_db}
+                    jsonStr = json.dumps({'TokenID' : TokenID, 'user' : user_db})
 
         Response = {'Code':"200" , 'users': json_messages}
-        return jsonify(Response)      
+        return jsonify(jsonStr)     
 
     except:
         
@@ -98,18 +131,20 @@ def handle_messages():
     try:
 
         json_messages = {}
+        jsonStr = []
         List_Of_Messages = MYSQL_DB.read_users_messages()
         for message in List_Of_Messages:
-            id_db, user_db, message_db = message
+            id_db, TokenID, message_db = message
             
-            if message_db != CONFIG.SOURCE:
-                json_messages[id_db] = {'user' : user_db , 'Message' : message_db}
+            if TokenID != CONFIG.SOURCE:
+                json_messages[id_db] = {'TokenID' : TokenID , 'Message' : message_db}
+                jsonStr.append(json.dumps({'TokenID' : TokenID , 'Message' : message_db}))
             
             else :
                 continue
 
         Response = {'Code':"200" , 'Messages': json_messages}
-        return jsonify(Response)      
+        return jsonify(jsonStr)      
 
     except:
         
@@ -120,16 +155,18 @@ def handle_messages():
 def handle_my_messages():
     '''this function return one user messages'''
     if request.method == 'POST':
-        user = request.json["user"]
+        TokenID = request.json["TokenID"]
         json_messages = {}
+        json_array = []
         List_Of_Messages = MYSQL_DB.read_users_messages()
         for message in List_Of_Messages:
             id_db, user_db, message_db = message
-            if user_db == user:
+            if user_db == TokenID:
                 json_messages[id_db] = {'Message' : message_db}
-        
+                json_array.append(json.dumps({'Message' : message_db}))
+
         Response = {'Code':"200" , 'Messages': json_messages}
-        return jsonify(Response)      
+        return jsonify(json_array)      
 
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
@@ -138,11 +175,11 @@ def handle_my_messages():
 def handle_send_message():
     '''this function is only for admin to send message to one user'''
     if request.method == "POST":
-        user = request.json["user"]
+        TokenID = request.json["TokenID"]
         msg = request.json["message"]
         try:
 
-            MYSQL_DB.write_user_message(user,msg)
+            MYSQL_DB.write_user_message(TokenID,msg)
             ret = {'status':'ok','code':'200'}
             return jsonify(ret)
 
@@ -154,22 +191,88 @@ def handle_send_message():
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
+@app.route('/book',methods=["GET", "POST"])
+def handle_book():
+    '''this function return users'''
+    if request.method == "POST":
+
+        TokenID = request.json["TokenID"]
+        Device = request.json["Device"]
+
+        try:
+            
+            List_Of_Users = MYSQL_DB.read_users_from_database()
+            for user in List_Of_Users:
+                id, user_db, nft, percentage = user
+                
+                if Device == "L":
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL1:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_L}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL2:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_L}" , 'level2': f"{CONFIG.LEVEL2_LINK_L}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL3:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_L}" , 'level2': f"{CONFIG.LEVEL2_LINK_L}" , 'level3': f"{CONFIG.LEVEL3_LINK_L}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL4:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_L}" , 'level2': f"{CONFIG.LEVEL2_LINK_L}" , 'level3': f"{CONFIG.LEVEL3_LINK_L}" , 'level4': f"{CONFIG.LEVEL4_LINK_L}"}
+                        return jsonify(Response)
+            
+                    if TokenID == nft and percentage == CONFIG.LEVEL5:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_L}" , 'level2': f"{CONFIG.LEVEL2_LINK_L}" , 'level3': f"{CONFIG.LEVEL3_LINK_L}" , 'level4': f"{CONFIG.LEVEL4_LINK_L}" , 'level5': f"{CONFIG.LEVEL5_LINK_L}"}
+                        return jsonify(Response)
+
+                if Device == "P":
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL1:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_P}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL2:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_P}" , 'level2': f"{CONFIG.LEVEL2_LINK_P}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL3:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_P}" , 'level2': f"{CONFIG.LEVEL2_LINK_P}" , 'level3': f"{CONFIG.LEVEL3_LINK_P}"}
+                        return jsonify(Response)
+
+                    if TokenID == nft and percentage == CONFIG.LEVEL4:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_P}" , 'level2': f"{CONFIG.LEVEL2_LINK_P}" , 'level3': f"{CONFIG.LEVEL3_LINK_P}" , 'level4': f"{CONFIG.LEVEL4_LINK_P}"}
+                        return jsonify(Response)
+            
+                    if TokenID == nft and percentage == CONFIG.LEVEL5:
+                        Response = {'Code':"200" , 'level1': f"{CONFIG.LEVEL1_LINK_P}" , 'level2': f"{CONFIG.LEVEL2_LINK_P}" , 'level3': f"{CONFIG.LEVEL3_LINK_P}" , 'level4': f"{CONFIG.LEVEL4_LINK_P}" , 'level5': f"{CONFIG.LEVEL5_LINK_P}"}
+                        return jsonify(Response)
+
+        except:
+            
+            ret = {'status':'failed','error':'connect to database failed'}
+            return jsonify(ret)
+
+    ret = {'status':'failed','error':'requests not valid'}
+    return jsonify(ret)
 
 @app.route(f'/{CONFIG.LEVEL1_CODE}',methods=["GET", "POST"])
 def handle_level_one_pass():
     '''This function pass level1 of games for one user'''
     if request.method == 'POST':
+        TokenID = request.json["TokenID"]
         user = request.json["user"]
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
+            id, user_db, TokenIDdb, percentage = user_dbb
+            if TokenIDdb == TokenID and Check_User(user,TokenID):
 
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
+                MYSQL_DB.update_user_percentage_in_database(TokenID,CONFIG.LEVEL1,CONFIG.LEVEL1_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
 
-            ret = {'status':'failed','error':'user not valid'}
+            ret = {'status':'failed','error':'user or TokenID not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -179,17 +282,18 @@ def handle_level_one_pass():
 def handle_level_two_pass():
     '''This function pass level2 of games for one user'''
     if request.method == 'POST':
+        TokenID = request.json["TokenID"]
         user = request.json["user"]
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
+            id, user_db, TokenIDdb, percentage = user_dbb
+            if TokenIDdb == TokenID and percentage == CONFIG.LEVEL1 and Check_User(user_db,TokenID):
 
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
+                MYSQL_DB.update_user_percentage_in_database(TokenID,CONFIG.LEVEL2,CONFIG.LEVEL2_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
 
-            ret = {'status':'failed','error':'user not valid'}
+            ret = {'status':'failed','error':'user or TokenID not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -199,17 +303,18 @@ def handle_level_two_pass():
 def handle_level_three_pass():
     '''This function pass level3 of games for one user'''
     if request.method == 'POST':
+        TokenID = request.json["TokenID"]
         user = request.json["user"]
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
+            id, user_db, TokenIDdb, percentage = user_dbb
+            if TokenIDdb == TokenID and percentage == CONFIG.LEVEL2 and Check_User(user,TokenID):
 
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
+                MYSQL_DB.update_user_percentage_in_database(TokenID,CONFIG.LEVEL3,CONFIG.LEVEL3_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
 
-            ret = {'status':'failed','error':'user not valid'}
+            ret = {'status':'failed','error':'user or TokenID not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -219,17 +324,18 @@ def handle_level_three_pass():
 def handle_level_four_pass():
     '''This function pass level4 of games for one user'''
     if request.method == 'POST':
+        TokenID = request.json["TokenID"]
         user = request.json["user"]
         List_Of_Users = MYSQL_DB.read_users_from_database()
         for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
+            id, user_db, TokenIDdb, percentage = user_dbb
+            if TokenIDdb == TokenID and percentage == CONFIG.LEVEL3 and Check_User(user,TokenID):
 
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
+                MYSQL_DB.update_user_percentage_in_database(TokenID,CONFIG.LEVEL4,CONFIG.LEVEL4_CODE)
                 ret = {'status':'ok','code':'200'}
                 return jsonify(ret)
 
-            ret = {'status':'failed','error':'user not valid'}
+            ret = {'status':'failed','error':'user or TokenID not valid'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
@@ -239,82 +345,73 @@ def handle_level_four_pass():
 def handle_level_five_pass():
     '''This function pass level5 of games for one user'''
     if request.method == 'POST':
+        TokenID = request.json["TokenID"]
         user = request.json["user"]
-        List_Of_Users = MYSQL_DB.read_users_from_database()
-        for user_dbb in List_Of_Users:
-            id, user_db, nft_hash, percentage = user_dbb
-            if user_db == user:
-
-                MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
-                ret = {'status':'ok','code':'200'}
-                return jsonify(ret)
-
-            ret = {'status':'failed','error':'user not valid'}
-            return jsonify(ret)
-
-    ret = {'status':'failed','error':'requests not valid'}
-    return jsonify(ret)
-
-@app.route(f'/{CONFIG.LEVEL6_CODE}',methods=["GET", "POST"])
-def handle_level_six_pass():
-    '''This function pass level6 of games for one user'''
-    if request.method == 'POST':
-        user = request.json["user"]
-        user_last_level = MYSQL_DB.read_user_last_level_in_database(user)
         try:
+            List_Of_Users = MYSQL_DB.read_users_from_database()
+            for user_dbb in List_Of_Users:
+                id, user_db, TokenIDdb, percentage = user_dbb
+                if TokenIDdb == TokenID and percentage == CONFIG.LEVEL4 and Check_User(user,TokenID):
 
-            if user_last_level[4][2] == CONFIG.LEVEL5_CODE:
-                List_Of_Users = MYSQL_DB.read_users_from_database()
-                for user_dbb in List_Of_Users:
-                    id, user_db, nft_hash, percentage = user_dbb
-                    if user_db == user:
-
-                        MYSQL_DB.update_user_percentage_in_database(user,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
-                        if Send_Winner(user):
+                    MYSQL_DB.update_user_percentage_in_database(TokenID,CONFIG.LEVEL5,CONFIG.LEVEL5_CODE)
+                    if Send_Winner(TokenID):
                             
-                            ret = {'status':'ok','code':'200'}
-                            return jsonify(ret)
+                        ret = {'status':'ok','code':'200'}
+                        return jsonify(ret)
 
-                        else:
+                    else:
 
-                            ret = {'status':'failed','error':'connect to database failed'}
-                            return jsonify(ret)
+                        ret = {'status':'failed','error':'connect to database failed'}
+                        return jsonify(ret)
                 
-                ret = {'status':'failed','error':'user not valid'}
-                return jsonify(ret)
+            ret = {'status':'failed','error':'user or TokenID not valid'}
+            return jsonify(ret)
 
         except:
 
-            ret = {'status':'failed','error':'user didnt pass level 5'}
+            ret = {'status':'failed','error':'user didnt pass level 4'}
             return jsonify(ret)
 
     ret = {'status':'failed','error':'requests not valid'}
     return jsonify(ret)
 
-def Send_Winner(user):
+def Send_Winner(TokenID):
     '''this function send message to winner'''
     
     admin_user = CONFIG.SOURCE
-    message = f"Top Secret! ,congratulations dear, you have done all levels! ,please send your wallet address : [{user}] code to [Greatspa81@gmail.com]."
+    message = f"Top Secret! ,congratulations dear, you have done all levels! ,please send [{TokenID}] code to [Greatspa81@gmail.com]."
 
     try:
         
-        MYSQL_DB.write_user_message(user,message)
-        MYSQL_DB.write_user_message(admin_user,user) # set winner - internal rule
+        MYSQL_DB.write_user_message(TokenID,message)
+        MYSQL_DB.write_user_message(admin_user,TokenID) # set winner - internal rule
         return True
 
     except:
 
         return False
 
-def Check_User(user):
+def Check_User(user,TokenID):
     '''This function check user address and user nft to validate user'''
-    contract = w3.eth.contract(address = CONFIG.CONTRACT_ADDRESS , abi = CONFIG.CONTRACT_ABI)
-    BalanceOfUser = contract.functions.balanceOf(user).call()
-    if BalanceOfUser == 0:
+    
+    contract = CONFIG.CONTRACT_ADDRESS
+    apikey = CONFIG.APIKEY
+    baseurl = CONFIG.APIURL
+    query = f"?module=account&action=tokennfttx&contractaddress={contract}&address={user}&page=1&offset=100&startblock=0&endblock=99999999&sort=asc&apikey={apikey}"
+
+    url = baseurl + query
+    response = requests.get(url)
+
+    try:
+
+        if response.json()['result'][0]['tokenID'] == str(TokenID) : 
+            return True
+
+        else:
+            return False
+
+    except:
         return False
-    else:
-        return True
 
 if __name__ == "__main__":
-    app.run("0.0.0.0",5000,debug=True)
+    app.run("0.0.0.0",5511,debug=False)
