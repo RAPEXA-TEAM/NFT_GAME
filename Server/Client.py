@@ -9,7 +9,7 @@ import os
 base_url = "http://127.0.0.1:5511"
 user = "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D" #TODO : change this with valid user in contract
 TokenID = "4560"                                    #TODO : change this with valid token id that user had
-password = '1234' 
+password = '1234'
 
 def ok(base_url,password):
     print("[+] Test basic login Server start.")
@@ -142,4 +142,4 @@ if __name__ == "__main__":
     read_user_messages(base_url,TokenID)
     read_winners(base_url)
     print("[+] Test done.")
-    #os.system('python MYSQL_DB.py execute')
+    os.system('python MYSQL_DB.py execute')
