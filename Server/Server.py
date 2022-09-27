@@ -18,7 +18,7 @@ app.config.update(
 
 FLUTTER_WEB_APP = 'templates'
 
-@app.route('/random_tokenid/06a750fd114f5fed65a8f507d0815666',methods=["GET", "POST"])
+@app.route('/random_tokenid',methods=["GET", "POST"])
 def handle_random_tokenid():
     '''this function return random tokenid''' 
     if request.method == 'POST':
@@ -30,6 +30,8 @@ def handle_random_tokenid():
                 
                 index = list_tokens.index(TokenID)
                 list_tokens.pop(index)
+                ret = {"code": "200", "status": "ok"}
+                return jsonify(ret)
 
     adad = random.choice(list_tokens)
     index = list_tokens.index(adad)

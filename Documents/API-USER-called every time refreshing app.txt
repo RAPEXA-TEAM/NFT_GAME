@@ -24,3 +24,13 @@ POST : {"TokenID": "4560" , "Device": "L"} , thefarameta.com/book
 {"Code": "200", "level1": "https://drive.google.com/uc?id=1cDWB7pvzxiA1Bne8KJmt1gxTIP72uM8H" , "level2": "https://drive.google.com/uc?id=1N9qMs8x7GYzCFaYQzbgz21Vn5gOvWjw0" , "level3": "https://drive.google.com/uc?id=1rrB8Honzs1hZZosVCOeNrQEGO1sm3R6-" , "level4": "https://drive.google.com/uc?id=1W3HMsM1RoAZIHgMoNzTq1JAAMEDLdnp7" , "level5": "https://drive.google.com/uc?id=1HpyaH5alXL2GETTU6vG29bhX5KHri2bf"},
 
 #------------------------------------------------------
+
+#LOGIN
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/login
+
+{'status':'ok','code':'200'}
+{'status':'failed','error':'user not exist'}
+{'status':'failed','error':'requests not valid'}
+
+#------------------------------------------------------

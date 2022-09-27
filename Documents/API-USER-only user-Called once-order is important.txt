@@ -1,5 +1,17 @@
 ## only user - Called once - order is important
 
+#RANDOM TokenID
+
+GET : thefarameta.com/random_tokenid
+
+{'status':'ok','TokenID': 4560}
+
+POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/random_tokenid
+
+{"code": "200", "status": "ok"}
+
+#------------------------------------------------------
+
 #CREATE USER
 
 POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"} , thefarameta.com/create_user
