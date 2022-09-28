@@ -142,6 +142,29 @@ def handle_users():
         ret = {'status':'failed','error':'connect to database failed'}
         return jsonify(ret)
 
+@app.route('/tokenids',methods=["GET", "POST"])
+def handle_tokenids():
+    '''this function return tokenids'''
+    
+    try:
+        
+        json_messages = {}
+        json_array = []
+        List_Of_Users = MYSQL_DB.read_users_from_database()
+        for user in List_Of_Users:
+
+            id, user_db, TokenID, percentage = user
+            json_messages[id] = {'user' : user_db,'TokenID' : TokenID,'percentage' : percentage}
+            json_array.append(json.dumps({'TokenID' : TokenID,'percentage' : percentage}))
+
+        Response = {'Code':"200" , 'users': json_messages}
+        return jsonify(json_array)      
+
+    except:
+        
+        ret = {'status':'failed','error':'connect to database failed'}
+        return jsonify(ret)
+
 #teturn : tokenid & user
 @app.route('/winners',methods=["GET", "POST"])
 def handle_winners():

@@ -34,3 +34,14 @@ POST : {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID": "4560"}
 {'status':'failed','error':'requests not valid'}
 
 #------------------------------------------------------
+
+#RETURN ALL USERS ON DATABASE
+
+GET : thefarameta.com/users
+
+["{\"user\": \"0x6B957a2791f6e88C99Ca0e58d866075430Daf31D\", \"TokenID\": \"4560\", \"percentage\": 100}"]
+
+{"Code": "200", "users": {"0": {"user": "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D", "TokenID" : "4560", "percentage": "10"}}},
+{"status": "failed", "error": "connect to database failed"},
+
+#------------------------------------------------------
