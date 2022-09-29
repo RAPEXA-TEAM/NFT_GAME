@@ -18,4 +18,4 @@
 
 11. Config MySQL server `python MYSQL_DB.py execute`
 12. Start Server `python Server.py`
-13. Test Server `python TEST.py`
+13. Test Server `python Client.py`

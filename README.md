@@ -17,6 +17,7 @@ The mysterious and obscure game of NFTs, participate in the game, just buy one o
 
 ## How to run
 
+- For Development `python3 Server/Development.py`
 - For WebServer follow [Server/RUN.md](https://github.com/RAPEXA-TEAM/NFT_GAME/blob/main/Server/RUN.md)
 - For Client follow [Clients/RUN.md](https://github.com/RAPEXA-TEAM/NFT_GAME/blob/main/Clients/RUN.md)
 - For Contract follow [Contract/RUN.md](https://github.com/RAPEXA-TEAM/NFT_GAME/blob/main/Contract/RUN.md)

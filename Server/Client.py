@@ -6,7 +6,7 @@
 import requests
 import os
 
-base_url = "http://127.0.0.1:5511"
+base_url = "http://127.0.0.1:80"
 user = "0x6B957a2791f6e88C99Ca0e58d866075430Daf31D" #TODO : change this with valid user in contract
 TokenID = "4560"                                    #TODO : change this with valid token id that user had
 password = '1234'
