@@ -26,10 +26,11 @@ LEVEL3_CODE = "6e30d713bb138b798061ce581b23ecbc23eda84b7676820b5729cbe2035c9fdb"
 LEVEL4_CODE = "f25d0521e7fa4ef8cbd04ff2c6fe674c5d30c3ce194565a18002280fa51b5e67"
 LEVEL5_CODE = "d9c9ec77c2377df2be249eabc9413905ca5960608ade94d667497102b12942ba"
 
+
 # Web3
-APIKEY = "J2JEBNHS6UY8M86SN5K1Y4GUINF58M7VXG"
-APIURL = "https://api.etherscan.io/api"
-CONTRACT_ADDRESS = "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D" #TODO: change this with main contract address on ETH
+APIKEY = "J2JEBNHS6UY8M86SN5K1Y4GUINF58M7VXG" # TODO: Provide api key from https://goerli.etherscan.io/
+APIURL = "https://goerli.etherscan.io/"
+CONTRACT_ADDRESS = "0x65Ad7DFB1b899579a03B3325B1166f4345d76a9F" #TODO: change this with main contract address on ETH
 
 #Book
 
