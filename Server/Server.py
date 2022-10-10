@@ -56,7 +56,7 @@ def handle_check_tokenid():
         TokenID = request.json["TokenID"]
         if Check_User(user, TokenID):
 
-            ret = {'status': 'ok', 'code': '200'}
+            ret = {'status': 'ok', 'code': '200', 'percentage': MYSQL_DB.find_user(TokenID)[3]}
             return jsonify(ret)
 
         else:
